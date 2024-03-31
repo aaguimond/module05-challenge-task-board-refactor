@@ -74,7 +74,12 @@ function handleDrop(event, ui) {
 
 // Todo: when the page loads, render the task list, add event listeners, make lanes droppable, and make the due date field a date picker
 $(document).ready(function () {
+    // The below makes the add task button open the modal when clicked
     $('#addTaskButton').click(function() {
-        alert("Clicked")
+        $('#taskModal').modal('show');
+    })
+    // The below lets the modal close button close the modal when clicked
+    $('.btn-close').click(function() {
+        $('#taskModal').modal('hide');
     })
 });
