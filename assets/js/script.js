@@ -13,21 +13,38 @@ function generateTaskId() {
 
 // Todo: create a function to create a task card
 function createTaskCard(task) {
+    const card = document.createElement('div');
+    card.classList.add('task-card', 'mb-2', 'card');
+    card.setAttribute('draggable', true)
+    card.dataset.taskId = task.id
 
+    const cardTitle = document.createElement('h3')
+    cardTitle.textContent = task.title
+    cardTitle.classList.add('card-title')
+
+    const cardDescription = document.createElement('p')
+    cardDescription.textContent = task.description
+    cardDescription.classList.add('card-description')
+
+    const cardDueDate = document.createElement('p')
+    cardDueDate.textContent = task.dueDate
+    cardDueDate.classList.add('card-due-date')
 }
 
 // Todo: create a function to render the task list and make cards draggable
 function renderTaskList() {
-
+    
 }
 
 // Todo: create a function to handle adding a new task
 function handleAddTask(event){
-    task.id = generateTaskId();
-    task.title = title;
-    task.description = description;
-    task.dueDate = dueDate;
-    task.color = 'normal';
+    function task(title, description, dueDate) {
+        task.id = generateTaskId();
+        task.title = title;
+        task.description = description;
+        task.dueDate = dueDate;
+        task.color = 'normal';
+    }
 }
 
 // Todo: create a function to handle deleting a task
@@ -44,3 +61,7 @@ function handleDrop(event, ui) {
 $(document).ready(function () {
 
 });
+
+// Modal form functions
+const modal = document.getElementById("taskModal");
+const addTaskBtn = document.getElementById("")
