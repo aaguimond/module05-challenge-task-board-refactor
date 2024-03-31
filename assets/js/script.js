@@ -46,6 +46,20 @@ function renderTaskList() {
 // Todo: create a function to handle adding a new task
 function handleAddTask(event){
 
+    const title = document.getElementById('taskTitle').value;
+    const description = document.getElementById('taskDescription').value;
+    const dueDate = document.getElementById('taskDueDate').value;
+    
+    const newTask = Task(title, description, dueDate);
+    tasks.push(newTask);
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+
+    renderTaskList();
+
+    document.getElementById('taskForm').reset();
+    var taskModalEl = document.getElementById('taskModal')
+    var taskModal = bootstrap.Modal.getIntstance(taskModalEl)
+    taskModal.hide();
 }
 
 // Todo: create a function to handle deleting a task
@@ -60,5 +74,7 @@ function handleDrop(event, ui) {
 
 // Todo: when the page loads, render the task list, add event listeners, make lanes droppable, and make the due date field a date picker
 $(document).ready(function () {
-
+    $('#addTaskButton').click(function() {
+        alert("Clicked")
+    })
 });
