@@ -24,7 +24,7 @@
     <div class="text-center mb-5">
       <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#formModal">Add Task</button>
     </div>
-    
+
     <div class="modal fade" id="formModal" tabindex="-1" aria-labelledby="formModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -44,7 +44,7 @@
               </div>
               <div class="mb-3">
                 <label for="taskDueDate" class="form-label">Due Date:</label>
-                <input type="date" class="form-control" id="taskDueDate" required>
+                <input class="form-control" id="taskDueDate" required autocomplete="off">
               </div>
               <button type="submit" class="btn btn-primary">Create Task</button>
             </form>

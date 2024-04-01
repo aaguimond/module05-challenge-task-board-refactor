@@ -11,6 +11,23 @@ body {
   cursor: grab;
 }
 
+.taskCard {
+  margin: 5%;
+  max-width: 90%;
+}
+
 .cardDeleteButton {
   float: right;
+}
+
+.past-due {
+  background-color: lightcoral;
+}
+
+.due-soon {
+  background-color: palegoldenrod;
+}
+
+.due-later {
+  background-color: lightgreen;
 }
