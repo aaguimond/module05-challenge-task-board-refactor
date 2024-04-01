@@ -17,10 +17,17 @@ function generateTaskId() {
 function createTaskCard() {
     if (!taskList) {
         return
-    } else {
-    taskList.forEach(task => {
+    } else { taskList.forEach(task => {
         const taskCard = document.createElement('div');
         taskCard.setAttribute('class','taskCard');
+        let taskId = task.id
+        taskCard.setAttribute('id', `taskId-${taskId}`)
+
+        const taskCardHeader = document.createElement('div')
+        taskCardHeader.setAttribute('class','taskCardHeader')
+        const cardDeleteButton = document.createElement('button')
+        cardDeleteButton.textContent = 'x'
+        cardDeleteButton.setAttribute('class','cardDeleteButton')
 
         const taskTitle = document.createElement('h4');
         taskTitle.textContent = task.title;
@@ -34,10 +41,11 @@ function createTaskCard() {
         taskDueDate.textContent = task.dueDate;
         taskDueDate.setAttribute('id','taskDueDate');
 
-        const taskId = task.id
         taskCard.setAttribute('id', `taskId-${taskId}`)
 
-        taskCard.appendChild(taskTitle);
+        taskCardHeader.appendChild(taskTitle);
+        taskCardHeader.appendChild(cardDeleteButton);
+        taskCard.appendChild(taskCardHeader);
         taskCard.appendChild(taskDescription);
         taskCard.appendChild(taskDueDate);
 
@@ -94,29 +102,33 @@ function handleAddTask(event) {
     $('#formModal').modal('hide');
     $('#taskForm').trigger('reset');
 
-    createTaskCard();
+    createTaskCard(newTask);
   }
   
 
 // Todo: create a function to handle deleting a task
 function handleDeleteTask(event){
+    event.preventDefault();
 
+    
 }
 
 // Todo: create a function to handle dropping a task into a new status lane
 function handleDrop(event, ui) {
-    const taskId = ui.draggable.data('task-id');
-    const newStatus = $(this).attr('id'); // ID of the column it was dropped into
+    // The below identifies the ID of the task that we drag and then replaces the status of the task to match that of
+    // the lane it's dropped into
+    const taskId = ui.draggable.attr('id').replace('taskId-', '');
+    const newStatus = $(this).attr('id');
   
-    // Update task status in taskList
-    const task = taskList.find((task) => task.id === taskId);  
-    if (task) {
-      task.status = newStatus;
-      localStorage.setItem('tasks', JSON.stringify(taskList));
-  
-      // Re-render to visually reflect the status change (optional)
-      renderTaskList(); 
+    // The below finds the task and identifies its taskId. If it doesn't find a task, it returns a -1, so we say if we do
+    // find a task, then we search our taskList for the status at that task's index and update it with the id of the lane
+    // we found above. Finally, we update it in local storage
+    const taskIndex = taskList.findIndex((task) => task.id === parseInt(taskId));  
+    if (taskIndex !== -1) {
+        taskList[taskIndex].status = newStatus;
+        localStorage.setItem('tasks', JSON.stringify(taskList));
     }
+    
 }
 
 // Todo: when the page loads, render the task list, add event listeners, make lanes droppable, and make the due date field a date picker

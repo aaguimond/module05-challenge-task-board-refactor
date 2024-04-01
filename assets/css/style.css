@@ -10,3 +10,7 @@ body {
 .taskCard:hover {
   cursor: grab;
 }
+
+.cardDeleteButton {
+  float: right;
+}
