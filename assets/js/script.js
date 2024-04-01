@@ -28,6 +28,7 @@ function createTaskCard() {
         const cardDeleteButton = document.createElement('button')
         cardDeleteButton.textContent = 'x'
         cardDeleteButton.setAttribute('class','cardDeleteButton')
+        cardDeleteButton.addEventListener('click', handleDeleteTask);
 
         const taskTitle = document.createElement('h4');
         taskTitle.textContent = task.title;
@@ -44,7 +45,7 @@ function createTaskCard() {
         taskCard.setAttribute('id', `taskId-${taskId}`)
 
         taskCardHeader.appendChild(taskTitle);
-        taskCardHeader.appendChild(cardDeleteButton);
+        taskCard.appendChild(cardDeleteButton);
         taskCard.appendChild(taskCardHeader);
         taskCard.appendChild(taskDescription);
         taskCard.appendChild(taskDueDate);
@@ -108,8 +109,20 @@ function handleAddTask(event) {
 
 // Todo: create a function to handle deleting a task
 function handleDeleteTask(event){
-    event.preventDefault();
 
+    const deleteButton = event.target;
+    const taskCard = deleteButton.closest('.taskCard');
+    const taskId = taskCard.id.replace('taskId-', '')
+    // Identifying the index that the task card we're deleting is at
+    const taskIndex = taskList.findIndex(task => task.id === parseInt(taskId));
+
+    if (taskIndex !== -1) {
+        taskList.splice(taskIndex, 1); 
+        localStorage.setItem('tasks', JSON.stringify(taskList));
+    }
+
+    
+    taskCard.remove();
     
 }
 
