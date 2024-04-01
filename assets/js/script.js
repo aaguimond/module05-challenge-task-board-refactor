@@ -2,10 +2,16 @@
 let taskList = JSON.parse(localStorage.getItem("tasks"));
 let nextId = JSON.parse(localStorage.getItem("nextId"));
 
-console.log()
 // Todo: create a function to generate a unique task id
 function generateTaskId() {
-
+    if (!nextId) {
+        nextId = 0
+    }
+    const newId = nextId;
+    nextId++;
+    localStorage.setItem('nextId', JSON.stringify(nextId));
+    console.log(newId)
+    return newId;
 }
 
 // Todo: create a function to create a task card
@@ -25,6 +31,9 @@ function createTaskCard() {
         const taskDueDate = document.createElement('p');
         taskDueDate.textContent = task.dueDate;
         taskDueDate.setAttribute('id','taskDueDate');
+
+        const taskId = task.id
+        taskCard.setAttribute('id', `taskId-${taskId}`)
 
         taskCard.appendChild(taskTitle);
         taskCard.appendChild(taskDescription);
@@ -89,8 +98,19 @@ function handleDrop(event, ui) {
 
 // Todo: when the page loads, render the task list, add event listeners, make lanes droppable, and make the due date field a date picker
 $(document).ready(function () {
-    createTaskCard();
+    if (taskList) {
+        createTaskCard()
+    }
     renderTaskList();
+
+    $('.taskCard').draggable({
+        revert: 'invalid'
+    });
+
+    $('.lane').droppable({
+        accept: '.taskCard', // Only accept task cards
+        drop: handleDrop // The function to handle dropped tasks (we'll define this next)
+    });
 
     $('#addTaskButton').click(function() {
         $('#formModal').modal('show');
