@@ -17,70 +17,68 @@ function generateTaskId() {
 
 // Todo: create a function to create a task card
 function createTaskCard(task) {
+    console.log('createTaskCard called with task:', task);
     if (!taskList) {
         return
-    } else { taskList.forEach(task => {
-        const taskCard = document.createElement('div');
-        taskCard.setAttribute('class','taskCard');
-        let taskId = task.id
-        taskCard.setAttribute('id', `taskId-${taskId}`)
+    }
 
-        const taskCardHeader = document.createElement('div')
-        taskCardHeader.setAttribute('class','taskCardHeader')
-        const cardDeleteButton = document.createElement('button')
-        cardDeleteButton.textContent = 'x'
-        cardDeleteButton.setAttribute('class','cardDeleteButton')
-        cardDeleteButton.addEventListener('click', handleDeleteTask);
+    const taskCard = document.createElement('div');
+    taskCard.setAttribute('class','taskCard');
+    let taskId = task.id
+    taskCard.setAttribute('id', `taskId-${taskId}`)
 
-        const taskTitle = document.createElement('h4');
-        taskTitle.textContent = task.title;
-        taskTitle.setAttribute('id','taskTitle');
+    const taskCardHeader = document.createElement('div')
+    taskCardHeader.setAttribute('class','taskCardHeader')
+    const cardDeleteButton = document.createElement('button')
+    cardDeleteButton.textContent = 'x'
+    cardDeleteButton.setAttribute('class','cardDeleteButton')
+    cardDeleteButton.addEventListener('click', handleDeleteTask);
 
-        const taskDescription = document.createElement('p');
-        taskDescription.textContent = task.description;
-        taskDescription.setAttribute('id','taskDescription');
+    const taskTitle = document.createElement('h4');
+    taskTitle.textContent = task.title;
+    taskTitle.setAttribute('id','taskTitle');
 
-        const taskDueDate = document.createElement('p');
-        taskDueDate.textContent = task.dueDate;
-        taskDueDate.setAttribute('id','taskDueDate');
+    const taskDescription = document.createElement('p');
+    taskDescription.textContent = task.description;
+    taskDescription.setAttribute('id','taskDescription');
 
-        taskCard.setAttribute('id', `taskId-${taskId}`)
+    const taskDueDate = document.createElement('p');
+    taskDueDate.textContent = task.dueDate;
+    taskDueDate.setAttribute('id','taskDueDate');
 
-        taskCardHeader.appendChild(taskTitle);
-        taskCard.appendChild(cardDeleteButton);
-        taskCard.appendChild(taskCardHeader);
-        taskCard.appendChild(taskDescription);
-        taskCard.appendChild(taskDueDate);
+    taskCard.setAttribute('id', `taskId-${taskId}`)
 
-        const taskStatus = task.status
-        let taskColumnPick = document.getElementById(`${taskStatus}-cards`)
-        taskColumnPick.appendChild(taskCard);
+    taskCardHeader.appendChild(taskTitle);
+    taskCard.appendChild(cardDeleteButton);
+    taskCard.appendChild(taskCardHeader);
+    taskCard.appendChild(taskDescription);
+    taskCard.appendChild(taskDueDate);
 
-        function updateTaskCardColor(task) {
-            const taskCard = document.getElementById(`taskId-${task.id}`);
-            if (taskCard) {
-                const dueDate = dayjs(task.dueDate);
-                const currentDate = dayjs();
+    const taskStatus = task.status
+    let taskColumnPick = document.getElementById(`${taskStatus}-cards`)
+    taskColumnPick.appendChild(taskCard);
+
+    function updateTaskCardColor(task) {
+        const taskCard = document.getElementById(`taskId-${task.id}`);
+        if (taskCard) {
+            const dueDate = dayjs(task.dueDate);
+            const currentDate = dayjs();
         
-                const dayDifference = dueDate.diff(currentDate, 'day');
+            const dayDifference = dueDate.diff(currentDate, 'day');
         
-                if (dayDifference <= 0) {
-                    taskCard.classList.add('past-due');
-                } else if (dayDifference <= 2) {
-                    taskCard.classList.add('due-soon');
-                } else { taskCard.classList.add('due-later')}
-            };
+            if (dayDifference <= 0) {
+                taskCard.classList.add('past-due');
+            } else if (dayDifference <= 2) {
+                taskCard.classList.add('due-soon');
+            } else { taskCard.classList.add('due-later')}
         };
+    };
 
-        updateTaskCardColor(task);
-    })};
+    updateTaskCardColor(task);
 }
-
-createTaskCard()
 
 // Todo: create a function to render the task list and make cards draggable
 function renderTaskList() {
-
     $('.taskCard').draggable({
         revert: 'invalid',
         zIndex: 100,
@@ -151,6 +149,7 @@ function handleDeleteTask(event){
 
 // Todo: create a function to handle dropping a task into a new status lane
 function handleDrop(event, ui) {
+    event.stopPropagation();
     // The below identifies the ID of the task that we drag and then replaces the status of the task to match that of
     // the lane it's dropped into
     const taskId = ui.draggable.attr('id').replace('taskId-', '');
@@ -169,22 +168,29 @@ function handleDrop(event, ui) {
 
 // Todo: when the page loads, render the task list, add event listeners, make lanes droppable, and make the due date field a date picker
 $(document).ready(function () {
-
-    renderTaskList();
+    function renderTasksFromLocalStorage() {
+        if (taskList) { // Check if there are tasks stored
+            taskList.forEach((task, index) => {
+                console.log('Rendering task:', task);
+                createTaskCard(taskList[index]); 
+            });
+        }
+    }
+    renderTasksFromLocalStorage()
 
     $('#todo-cards').droppable({
         accept: '.taskCard', // Only accept task cards
-        drop: handleDrop // The function to handle dropped tasks (we'll define this next)
+        drop: handleDrop // The function to handle dropped tasks
     });
 
     $('#in-progress-cards').droppable({
         accept: '.taskCard', // Only accept task cards
-        drop: handleDrop // The function to handle dropped tasks (we'll define this next)
+        drop: handleDrop // The function to handle dropped tasks
     });
 
     $('#done-cards').droppable({
         accept: '.taskCard', // Only accept task cards
-        drop: handleDrop // The function to handle dropped tasks (we'll define this next)
+        drop: handleDrop // The function to handle dropped tasks
     });
 
     $('.lane').sortable({
@@ -196,10 +202,6 @@ $(document).ready(function () {
     });
 
     $('h2').sortable({
-        disable: true
-    });
-
-    $('div.card-body').sortable({
         disable: true
     });
 
