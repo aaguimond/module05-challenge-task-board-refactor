@@ -12,8 +12,8 @@ body {
 }
 
 .taskCard {
-  margin: 5%;
-  max-width: 90%;
+  max-width: 100%;
+  padding: 5%
 }
 
 .cardDeleteButton {
@@ -30,10 +30,6 @@ body {
 
 .due-later {
   background-color: lightgreen;
-}
-
-.completed {
-  background-color: aliceblue;
 }
 
 #todo-cards,
