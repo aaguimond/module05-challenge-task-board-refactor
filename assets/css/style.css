@@ -31,3 +31,14 @@ body {
 .due-later {
   background-color: lightgreen;
 }
+
+.completed {
+  background-color: aliceblue;
+}
+
+#todo-cards,
+#in-progress-cards,
+#done-cards {
+  min-height: 100%;
+  min-width: 100%;
+}

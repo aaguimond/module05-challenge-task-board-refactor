@@ -58,6 +58,8 @@ function createTaskCard(task) {
     let taskColumnPick = document.getElementById(`${taskStatus}-cards`)
     taskColumnPick.appendChild(taskCard);
 
+    renderTaskList();
+    
     function updateTaskCardColor(task) {
         const taskCard = document.getElementById(`taskId-${task.id}`);
         if (taskCard) {
@@ -84,7 +86,8 @@ function renderTaskList() {
         zIndex: 100,
         connectToSortable: '.lane',
     });
-    $('.taskCard').sortable({
+
+    $('#todo-cards').sortable({
         appendTo: document.body
     });
     
@@ -162,8 +165,7 @@ function handleDrop(event, ui) {
     if (taskIndex !== -1) {
         taskList[taskIndex].status = newStatus;
         localStorage.setItem('tasks', JSON.stringify(taskList));
-    }
-    
+    };
 }
 
 // Todo: when the page loads, render the task list, add event listeners, make lanes droppable, and make the due date field a date picker
@@ -171,38 +173,25 @@ $(document).ready(function () {
     function renderTasksFromLocalStorage() {
         if (taskList) { // Check if there are tasks stored
             taskList.forEach((task, index) => {
-                console.log('Rendering task:', task);
                 createTaskCard(taskList[index]); 
             });
         }
     }
     renderTasksFromLocalStorage()
 
-    $('#todo-cards').droppable({
-        accept: '.taskCard', // Only accept task cards
-        drop: handleDrop // The function to handle dropped tasks
-    });
-
-    $('#in-progress-cards').droppable({
-        accept: '.taskCard', // Only accept task cards
-        drop: handleDrop // The function to handle dropped tasks
-    });
-
-    $('#done-cards').droppable({
-        accept: '.taskCard', // Only accept task cards
-        drop: handleDrop // The function to handle dropped tasks
-    });
+    renderTaskList();
 
     $('.lane').sortable({
-        connectWith: '.lane'
-    });
+        connectWith: '.lane',
+        tolerance: 'pointer',
+        handle: '.taskCardHeader',
+        cursor: 'move',
+        placeholder: 'taskCard-placeholder'
+    })
 
-    $('.card-header').sortable({
-        disable: true
-    });
-
-    $('h2').sortable({
-        disable: true
+    $('.lane').droppable({
+        accept: '.taskCard', // Only accept task cards
+        drop: handleDrop // The function to handle dropped tasks
     });
 
     $('#addTaskButton').click(function() {
